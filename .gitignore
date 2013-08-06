@@ -19,3 +19,6 @@ Release/
 
 #sth
 Pulsip.opensdf
+*.suo
+*.user
+*.ncb
