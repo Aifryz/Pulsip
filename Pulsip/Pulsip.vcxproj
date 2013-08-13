@@ -11,9 +11,32 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AnimatedSprite.cpp" />
+    <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GameObject.cpp" />
+    <ClCompile Include="src\Level.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\QuadTree.cpp" />
+    <ClCompile Include="src\ResourceManager.cpp" />
+    <ClCompile Include="src\Sector.cpp" />
+    <ClCompile Include="src\Tile.cpp" />
+    <ClCompile Include="src\TileMap.cpp" />
+    <ClCompile Include="src\util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AnimatedSprite.h" />
+    <ClInclude Include="include\Entity.h" />
+    <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\GameObject.h" />
+    <ClInclude Include="include\Level.h" />
+    <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\QuadTree.h" />
+    <ClInclude Include="include\ResourceManager.h" />
+    <ClInclude Include="include\Sector.h" />
+    <ClInclude Include="include\Tile.h" />
+    <ClInclude Include="include\TileMap.h" />
     <ClInclude Include="include\util.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

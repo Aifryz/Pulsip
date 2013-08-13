@@ -1,11 +1,17 @@
-#include <SFML/Graphics.hpp>
+
+#include "../include/Player.h"
+#include "../include/ResourceManager.h"
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
-
+    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
+	ResourceManager man;
+	
+	sf::Texture texture;
+	
+	sf::Clock clk;
+	
+	Player p(man.getTexture("player.png"));
     while (window.isOpen())
     {
         sf::Event event;
@@ -14,9 +20,14 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-
+		
         window.clear();
-        window.draw(shape);
+		sf::Time tt = clk.restart();
+		p.move(tt);
+		p.tick(tt);
+		
+		window.draw(p);
+		
         window.display();
     }
 
