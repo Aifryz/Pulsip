@@ -1,10 +1,11 @@
 
 #include "../include/Player.h"
 #include "../include/ResourceManager.h"
+#include "../include/Game.h"
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
+    /*sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
 	ResourceManager man;
 	
 	sf::Texture texture;
@@ -29,7 +30,9 @@ int main()
 		window.draw(p);
 		
         window.display();
-    }
+    }*/
+	Game game;
+	game.start();
 
     return 0;
 }
