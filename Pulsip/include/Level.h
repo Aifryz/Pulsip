@@ -8,11 +8,12 @@ class Level
 public:
 	Level();
 	~Level();
-	Level(GameEvents eventqueue);
+	Level(GameEvents* eventqueue);
+	void tick(sf::Time dt);
 
 private:
 	GameEvents m_events;
-	GameEvents* m_gameevents
+	GameEvents* m_gameevents;
 	
 };
 #endif

@@ -28,22 +28,20 @@ void Player::collide(GameObject* pOther)
 {
 	
 }
-sf::Vector2i Player::move(sf::Time time)
+void Player::move(sf::Time time)
 {
 	m_oldcolrect = m_colrect;
 	sf::Vector2f dp = (time.asSeconds()* m_speed) + m_rest;
-	if(dp.x > 1 ||dp.x<0 ||dp.y<0 || dp.y > 1)
+	if(dp.x > 1 ||dp.x<-1 ||dp.y<-1 || dp.y > 1)
 	{
 		sf::Vector2i dpi = static_cast<sf::Vector2i>(dp);
 		m_rest = dp - static_cast<sf::Vector2f>(dpi);
 		dpi.x += m_colrect.left;
 		dpi.y += m_colrect.top;
 		setPosition(dpi);
-		return static_cast<sf::Vector2i>(dp);
 	}
 	else
 		m_rest = dp;
-	return sf::Vector2i(0,0);
 	
 }
 
@@ -131,3 +129,40 @@ void Player::frameTick(sf::Time time)
 	m_sprite.update();
 	
 }
+void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	//center the global view on player
+	sf::View myview = target.getView();
+	sf::Vector2f newcenter = static_cast<sf::Vector2f>(getPosition() + getSize()/2);
+	myview.setCenter(newcenter);
+	target.setView(myview);
+
+	//draw player
+	target.draw(m_sprite, states);
+}
+
+bool contains(sf::FloatRect parent, sf::FloatRect child)
+{
+	bool istrue = (
+	parent.left < child.left &&
+	parent.top < child.top &&
+	parent.top+parent.height > child.top+child.height &&
+	parent.left+parent.width > child.left+child.width);
+	return istrue;
+}
+
+//bool contains(sf::FloatRect parent, sf::FloatRect child, sf::FloatRect& contained)
+//{
+//	bool istrue = (
+//	parent.left < child.left &&
+//	parent.top < child.top &&
+//	parent.top+parent.height > child.top+child.height &&
+//	parent.left+parent.width > child.left+child.width);
+//	if(istrue)
+//		contained = child;
+//	else
+//	{
+//
+//	}
+//	NOT FINISHED!!!
+//}

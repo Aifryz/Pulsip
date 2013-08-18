@@ -10,7 +10,7 @@ public:
 	~Game();	
 	void start();
 private:
-	std::queue<GameEvent> m_events;
+	GameEvents m_events;
 	Level* m_level;
 };
 #endif // !GAME_H

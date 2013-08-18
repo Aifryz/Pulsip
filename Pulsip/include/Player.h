@@ -12,7 +12,7 @@ public:
 	Player(){};
 	void tick(sf::Time ticktime);
 	void collide(GameObject* pOther);
-	sf::Vector2i move(sf::Time time);
+	void move(sf::Time time);
 
 	int getSubtype() const;
 	
@@ -23,6 +23,7 @@ private:
 	void frameTick(sf::Time time);
 	char m_frame;
 	char m_face;
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	//facing
 	//812  

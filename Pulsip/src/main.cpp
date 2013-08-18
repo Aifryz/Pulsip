@@ -1,17 +1,17 @@
 
 #include "../include/Player.h"
 #include "../include/ResourceManager.h"
-#include "../include/Game.h"
+//#include "../include/Game.h"
 
 int main()
 {
-    /*sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
 	ResourceManager man;
 	
-	sf::Texture texture;
-	
 	sf::Clock clk;
-	
+	sf::CircleShape shape(100.f);
+    shape.setFillColor(sf::Color::Green);
+
 	Player p(man.getTexture("player.png"));
     while (window.isOpen())
     {
@@ -28,11 +28,10 @@ int main()
 		p.tick(tt);
 		
 		window.draw(p);
-		
+		window.draw(shape);
         window.display();
-    }*/
-	Game game;
-	game.start();
+    }
+	
 
     return 0;
 }
