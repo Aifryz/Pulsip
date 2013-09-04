@@ -1,4 +1,4 @@
-#include "..\include\Player.h"
+#include "../include/Player.h"
 
 #include<iostream>
 
@@ -11,7 +11,6 @@ Player::Player(const sf::Texture& texture)
 	m_colrect.height = 31;
 	m_colrect.width = 31;
 	m_face = 0;
-	
 	
 
 }

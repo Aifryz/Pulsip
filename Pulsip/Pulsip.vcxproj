@@ -21,6 +21,7 @@
     <ClCompile Include="src\QuadTree.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
     <ClCompile Include="src\Sector.cpp" />
+    <ClCompile Include="src\SpriteAnimator.cpp" />
     <ClCompile Include="src\Tile.cpp" />
     <ClCompile Include="src\TileMap.cpp" />
     <ClCompile Include="src\util.cpp" />
@@ -36,6 +37,7 @@
     <ClInclude Include="include\QuadTree.h" />
     <ClInclude Include="include\ResourceManager.h" />
     <ClInclude Include="include\Sector.h" />
+    <ClInclude Include="include\SpriteAnimator.h" />
     <ClInclude Include="include\Tile.h" />
     <ClInclude Include="include\TileMap.h" />
     <ClInclude Include="include\util.h" />

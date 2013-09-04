@@ -1,7 +1,7 @@
 #ifndef GAME_EVENT_H
 #define GAME_EVENT_H
 
-#include<SFML\Graphics.hpp>
+#include<SFML/Graphics.hpp>
 #include<queue>
 class GameEvent
 {
