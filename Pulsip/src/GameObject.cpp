@@ -1,4 +1,4 @@
-#include "..\include\GameObject.h"
+#include "../include/GameObject.h"
 
 sf::IntRect GameObject::getColRect() const
 {

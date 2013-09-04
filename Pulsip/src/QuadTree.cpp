@@ -1,6 +1,7 @@
-#include"../include/QuadTree.h"
-#include<sstream>
-#include<iostream>
+#include "../include/QuadTree.h"
+#include <sstream>
+#include <iostream>
+
 QuadTree::QuadTree(sf::Vector2i pos, sf::Vector2i size,int objectsToSplit, int level)
 {
 	dimensions = sf::IntRect(pos,size);
@@ -27,9 +28,6 @@ QuadTree::QuadTree()
 	nodes = 0;
 	isLeaf = true;
 }
-	
-	
-	
 
 QuadTree::~QuadTree()
 {
@@ -42,7 +40,7 @@ void QuadTree::addObject(GameObject* object)
 	if(isLeaf)
 	{
 		objects.push_back(object);
-		if(objects.size()==objectsToSplit)
+		if(objects.size() == objectsToSplit)
 		{
 			split();
 			addToLeaves();
@@ -63,24 +61,23 @@ void QuadTree::addObject(GameObject* object)
 }
 void QuadTree::removeObject(GameObject* object)
 {
-	
 	if(!isLeaf)
 	{
-		for(int n=0;n<4;++n)
+		for(int n = 0; n < 4; ++n)
 		{
 			nodes[n].removeObject(object);	
 		}
 	}
 
-	for(auto i = objects.begin(); i != objects.end();)
+    auto i = objects.begin();
+	for(; i != objects.end();)
 			if (*i == object)
 			{
 				i = objects.erase(i);
 				return;
 			}
 			else
-				++i;	
-	
+				++i;
 }
 
 std::list<GameObject*> QuadTree::getObjectsAt(sf::Vector2i pos)
@@ -113,8 +110,6 @@ std::list<GameObject*> QuadTree::getObjectsAt(sf::Vector2i pos)
 //draw
 void QuadTree::draw(sf::RenderWindow* window)
 {
-	
-
 	std::stringstream ss;
 	ss<<objects.size();
 	sf::String num = ss.str();
@@ -132,7 +127,7 @@ void QuadTree::draw(sf::RenderWindow* window)
 	window->draw(text);
 	if(!isLeaf)
 	{
-		for(int n=0;n<4;++n)
+		for (int n=0;n<4;++n)
 		{
 			nodes[n].draw(window);
 		}
@@ -141,7 +136,7 @@ void QuadTree::draw(sf::RenderWindow* window)
 
 bool QuadTree::contains(sf::Vector2i pos)
 {
-	if((pos.x>dimensions.left && pos.x < dimensions.left+dimensions.width)&&(pos.y>dimensions.top && pos.y < dimensions.top+dimensions.height))
+	if ((pos.x > dimensions.left && pos.x < dimensions.left+dimensions.width)&&(pos.y>dimensions.top && pos.y < dimensions.top+dimensions.height))
 		return true;
 	return false;
 }
@@ -162,7 +157,7 @@ void QuadTree::split()
 //add to leaves
 void QuadTree::addToLeaves()
 {
-	for ( int n = 0; n < 4; ++n )
+	for (int n = 0; n < 4; ++n )
 	{
 		for(auto i = objects.begin(); i != objects.end();)
 		{
@@ -184,10 +179,8 @@ bool QuadTree::contains(GameObject* object)
 	sf::IntRect oRect = object->getColRect();
 
 	return(
-	dimensions.left < oRect.left &&
-	dimensions.top < oRect.top &&
-	dimensions.top+dimensions.height > oRect.top+oRect.height &&
-	dimensions.left+dimensions.width > oRect.left+oRect.width);
+        dimensions.left < oRect.left &&
+        dimensions.top < oRect.top &&
+        dimensions.top+dimensions.height > oRect.top+oRect.height &&
+        dimensions.left+dimensions.width > oRect.left+oRect.width);
 }
-
-

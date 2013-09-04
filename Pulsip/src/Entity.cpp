@@ -1,4 +1,4 @@
-#include "..\include\Entity.h"
+#include "../include/Entity.h"
 
 void Entity::setPosition(sf::Vector2i position)
 {
