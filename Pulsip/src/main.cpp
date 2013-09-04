@@ -1,7 +1,7 @@
 
-//#include "../include/Player.h"
+#include "../include/Player.h"
 #include "../include/ResourceManager.h"
-//#include "../include/Game.h"
+#include "../include/Game.h"
 #include "../include/SpriteAnimator.h"
 #include <iostream>
 int main()
