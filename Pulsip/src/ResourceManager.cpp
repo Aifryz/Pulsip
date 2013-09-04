@@ -1,8 +1,10 @@
-#include"../include/ResourceManager.h"
+#include "../include/ResourceManager.h"
+
 ResourceManager::ResourceManager()
 {
 	load();
 }
+
 bool ResourceManager::load()
 {
 	return 
@@ -15,10 +17,12 @@ const sf::Texture& ResourceManager::getTexture(std::string name)
 {
 	return m_textures[name];
 }
+
 const sf::Font& ResourceManager::getFont(std::string name)
 {
 	return m_fonts[name];
 }
+
 const sf::SoundBuffer& ResourceManager::getSoundBuffer(std::string name)
 {
 	return m_soundbuffers[name];
@@ -32,6 +36,7 @@ bool ResourceManager::loadTexture(std::string name)
 	m_textures[name] = txt;
 	return true;
 }
+
 bool ResourceManager::loadFont(std::string name)
 {
 	sf::Font font;
@@ -40,6 +45,7 @@ bool ResourceManager::loadFont(std::string name)
 	m_fonts[name] = font;
 	return true;
 }
+
 bool ResourceManager::loadSoundBuffer(std::string name)
 {
 	sf::SoundBuffer buffer;

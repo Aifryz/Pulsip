@@ -1,6 +1,6 @@
 #include "../include/Player.h"
 
-#include<iostream>
+#include <iostream>
 
 Player::Player(const sf::Texture& texture)
 {

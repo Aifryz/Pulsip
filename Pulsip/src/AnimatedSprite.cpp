@@ -1,4 +1,5 @@
-#include"..\include\AnimatedSprite.h"
+#include "../include/AnimatedSprite.h"
+
 AnimatedSprite::AnimatedSprite()
 {
 	m_texture = NULL;
