@@ -22,3 +22,6 @@ Pulsip.opensdf
 *.suo
 *.user
 *.ncb
+
+# Other files
+*.gch
