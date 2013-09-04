@@ -5,29 +5,28 @@
 
 class Tile
 {
-public:
-	enum SubType
-	{
-		FLOOR = 0,
-		WALL,
-		GRATE
-	};
-	Tile(int subtype, int x, int y);
-	Tile();
-	void tick(sf::Time ticktime);
+    public:
+        enum SubType
+        {
+            FLOOR = 0,
+            WALL,
+            GRATE
+        };
 
-	sf::Vector2i getSize() const;
-	sf::Vector2i getPosition() const;
+        Tile(int subtype, int x, int y);
+        Tile();
+        void tick(sf::Time ticktime);
 
-	int getType() const;
-	bool isCollideable() const;
+        sf::Vector2i getSize() const;
+        sf::Vector2i getPosition() const;
 
-	
+        int getType() const;
+        bool isCollideable() const;
 
-private:
-	sf::Vector2i m_position;
-	sf::Vector2i m_size;
-	int m_type;
+    private:
+        sf::Vector2i m_position;
+        sf::Vector2i m_size;
+        int m_type;
 };
 
 #endif
