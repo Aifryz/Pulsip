@@ -1,7 +1,7 @@
 #ifndef SPRITE_ANIMATOR_H
 #define SPRITE_ANIMATOR_H
 
-#include"SFML\Graphics.hpp"
+#include"SFML/Graphics.hpp"
 #include<vector>
 #include<map>
 struct Frame
@@ -41,7 +41,7 @@ private:
 	sf::Sprite& m_sprite;
 	std::map<std::string,SpriteAnimation> m_animations;
 };
-/**Helper function to add multiple frames*/
+/**Helper function to add multiple frames to single animation*/
 void addFrames(SpriteAnimation& animation, int row, int start, int stop, sf::Vector2i framesize);
 
 #endif // !SPRITE_ANIMATOR_H

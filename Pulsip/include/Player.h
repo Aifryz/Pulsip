@@ -17,12 +17,8 @@ public:
 	int getSubtype() const;
 	
 private:
-	sf::Time m_frametime;
-	sf::Time m_dirtime;
 	void speedTick();
-	void frameTick(sf::Time time);
-	char m_frame;
-	char m_face;
+
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	//facing

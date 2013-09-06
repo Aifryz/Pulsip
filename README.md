@@ -6,13 +6,15 @@ This framework is nowhere near done.
 Features
 --------
 Right now I've implemented some basic features such as:
--Animated Sprite(will change that into sprite animator)
+-Sprite Animation
 -Basic Entity
 -Basic Player controls
 -Quad Tree for collision
 -very simple Resource Manager
 -TileMap(right now with fixed tilesize and position[starts at 0,0]) 
+
 I plan to add at least:
+
 -Level management
 -Basic GUI elements
 -Particle system

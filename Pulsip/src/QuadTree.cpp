@@ -49,11 +49,11 @@ void QuadTree::addObject(GameObject* object)
 		return;
 	}
 
-	for(int n=0;n<4;++n)
+	for(int n = 0;n<4;++n)
 	{
 		if (nodes[n].contains(object))
 		{
-			nodes[n].addObject( object );
+			nodes[n].addObject(object);
 			return;
 		}
 	}
@@ -63,9 +63,13 @@ void QuadTree::removeObject(GameObject* object)
 {
 	if(!isLeaf)
 	{
-		for(int n = 0; n < 4; ++n)
+		for(int n = 0;n<4;++n)
 		{
-			nodes[n].removeObject(object);	
+			if (nodes[n].contains(object))
+			{
+				nodes[n].removeObject( object );
+				return;
+			}
 		}
 	}
 
@@ -91,7 +95,7 @@ std::list<GameObject*> QuadTree::getObjectsAt(sf::Vector2i pos)
 
 	if ( !objects.empty() )
 		returnedObjects.insert( returnedObjects.end(), objects.begin(), objects.end() );
-	//
+
 	for ( int n = 0; n < 4; ++n ) {
 		if ( nodes[n].contains(pos) ) {
 			childObjects = nodes[n].getObjectsAt( pos );

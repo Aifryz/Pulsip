@@ -2,7 +2,7 @@
 #define ENTITY_H
 
 #include "GameObject.h"
-#include "AnimatedSprite.h"
+
 
 class Entity:public sf::Drawable,public GameObject
 {
@@ -28,6 +28,6 @@ class Entity:public sf::Drawable,public GameObject
         sf::Vector2f m_rest;
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
         
-        AnimatedSprite m_sprite;
+		sf::Sprite m_sprite;
 };
 #endif

@@ -11,7 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\AnimatedSprite.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
@@ -27,7 +26,6 @@
     <ClCompile Include="src\util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\AnimatedSprite.h" />
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\GameObject.h" />
@@ -41,6 +39,7 @@
     <ClInclude Include="include\Tile.h" />
     <ClInclude Include="include\TileMap.h" />
     <ClInclude Include="include\util.h" />
+    <ClInclude Include="UtilTemplates.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5F75C6AA-A2AF-4572-97DE-28BDF9BF36DA}</ProjectGuid>

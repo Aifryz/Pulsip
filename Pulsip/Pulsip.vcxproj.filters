@@ -36,9 +36,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\AnimatedSprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -89,9 +86,6 @@
     <ClInclude Include="include\GameEvent.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="include\AnimatedSprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Level.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
@@ -117,6 +111,9 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="include\SpriteAnimator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UtilTemplates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
