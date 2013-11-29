@@ -1,7 +1,6 @@
 #ifndef TILEMAP_H
 #define TILEMAP_H
 
-
 #include"Sector.h"
 #include"GameObject.h"
 class TileMap: public sf::Drawable

@@ -3,31 +3,22 @@
 
 #include"SFML/Graphics.hpp"
 
-class GameObject
+class GameObject:public sf::Drawable
 {
-	enum ObjectType
-	{
-		PLAYER = 0,
-		ENTITY,
-		STATIC,
-	};
 public:
 	virtual void tick(sf::Time ticktime) = 0;
-	virtual void collide(GameObject* pOther) = 0;
+	virtual void collide(GameObject* other) = 0;//should be {other->onCollision(this))} in every derived object
+	//collisions with every derived object
+	//eg virtual void onCollision(Player* other) = 0;
+	//add here
 
-	ObjectType getType() const;
-	virtual sf::Vector2i getSize() const = 0;
-	virtual sf::Vector2i getPosition() const = 0;
-
+	virtual sf::Vector2f getSize() const = 0;
+	virtual sf::Vector2f getPosition() const = 0;
 	virtual void setPosition(sf::Vector2i position)= 0;
 	
-	
-	sf::IntRect getColRect() const;
-	
-	
-	
+	sf::FloatRect getColRect() const;
 protected:
-	ObjectType m_type;
-	sf::IntRect m_colrect;
+	sf::FloatRect m_colrect;
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
 };
 #endif

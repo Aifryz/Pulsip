@@ -34,16 +34,9 @@ sf::Vector2<T> getSignVector(sf::Vector2<T> vector)
 	sign.x = (vector.x < 0)? -1 : 1;
 	sign.y = (vector.y < 0)? -1 : 1;
 
-	sign.x = (vector.x == 0)? 0 : signx;
-	sign.y = (vector.y == 0)? 0 : signy;
+	sign.x = (vector.x == 0)? 0 : sign.x;
+	sign.y = (vector.y == 0)? 0 : sign.y;
 
 	return sign;
-}
-
-/**Returns dot product of two vectors*/
-template<typename T>
-inline T dotProduct(sf::Vector2<T> first , sf::Vector2<T> second)
-{
-	T first.x*second.x + first.y*second.y;
 }
 #endif // !UTIL_TEMPLATES_H

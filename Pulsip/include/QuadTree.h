@@ -16,9 +16,9 @@ class QuadTree
 	};
 
     public:
-        QuadTree(sf::Vector2i pos, sf::Vector2i size,int objectsToSplit = 3, int level = 0);
-        QuadTree(sf::IntRect dims,int objectsToSplit = 3, int level = 0);
-        QuadTree();
+        QuadTree(sf::Vector2f pos, sf::Vector2f size,int objectsToSplit = 3, int level = 0);
+        QuadTree(sf::FloatRect dims,int objectsTosplit = 3, int level = 0);
+		QuadTree();
         ~QuadTree();
         
         void addObject(GameObject* object);
@@ -26,25 +26,20 @@ class QuadTree
         std::list<GameObject*> getObjectsAt(sf::Vector2i pos);
 
         void removeEmpty();
-        void draw(sf::RenderWindow* window);
         bool contains(sf::Vector2i pos);
 
     private:
-        void split();
-        void addToLeaves();
-        bool contains(GameObject* object);
-        
-        
-        bool isLeaf;
-        sf::IntRect dimensions;
-        unsigned int objectsToSplit;
-        unsigned int level;
+        void m_split();
+        void m_addToLeaves();
+        bool m_contains(GameObject* object);
 
-        std::list<GameObject*> objects;
-        QuadTree * 	nodes;
-        
-        sf::RectangleShape shape;
-        sf::Font font;
-        sf::Text text;
+        bool m_isLeaf;
+        sf::FloatRect m_dimensions;
+        unsigned int m_objectsToSplit;
+        unsigned int m_level;
+		unsigned int m_total_objects;
+
+        std::list<GameObject*> m_objects;
+        QuadTree* m_nodes;
 };
 #endif // !QUAD_TREE_H

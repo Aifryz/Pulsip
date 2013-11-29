@@ -9,7 +9,6 @@ class Player: public Entity
 {
 public:
 	Player(const sf::Texture& texture);
-	Player(){};
 	void tick(sf::Time ticktime);
 	void collide(GameObject* pOther);
 	void move(sf::Time time);

@@ -65,7 +65,7 @@ std::vector<Tile> TileMap::getCollidingWith(GameObject*object)const
 {
 	std::vector<Tile> returntiles;
 	
-	sf::IntRect rect = object->getColRect();
+	sf::IntRect rect = static_cast<sf::IntRect>( object->getColRect() );
 
 		sf::Vector2i NW((rect.left)/32           ,(rect.top)/32);
 		sf::Vector2i SE((rect.left+rect.width)/32   ,(rect.top+rect.height)/32);

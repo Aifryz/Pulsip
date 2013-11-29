@@ -2,82 +2,87 @@
 #include <sstream>
 #include <iostream>
 
-QuadTree::QuadTree(sf::Vector2i pos, sf::Vector2i size,int objectsToSplit, int level)
+QuadTree::QuadTree(sf::Vector2f pos, sf::Vector2f size,int objectsToSplit, int level)
 {
-	dimensions = sf::IntRect(pos,size);
-	this->objectsToSplit = objectsToSplit;
-	this->level = 0;
-	isLeaf = true;
-	nodes = 0;	
+	m_dimensions = sf::FloatRect(pos,size);
+	m_objectsToSplit = objectsToSplit;
+	m_level = 0;
+	m_isLeaf = true;
+	m_nodes = 0;
+	m_total_objects = 0;
 }
 
-QuadTree::QuadTree(sf::IntRect dims,int objectsToSplit, int level)
+QuadTree::QuadTree(sf::FloatRect dims,int objectsToSplit, int level)
 {
-	dimensions = dims;
-	this->objectsToSplit = objectsToSplit;
-	this->level = level;
-	isLeaf = true;
-	nodes = 0;
+	m_dimensions = dims;
+	m_objectsToSplit = objectsToSplit;
+	m_level = level;
+	m_isLeaf = true;
+	m_nodes = 0;
+	m_total_objects = 0;
 }
 
 QuadTree::QuadTree()
 {
-	dimensions = sf::IntRect(0,0,0,0);
-	objectsToSplit = 3;
-	level = 0;
-	nodes = 0;
-	isLeaf = true;
+	m_dimensions = sf::FloatRect(0,0,0,0);
+	m_objectsToSplit = 3;
+	m_level = 0;
+	m_nodes = 0;
+	m_isLeaf = true;
+	m_total_objects = 0;
 }
 
 QuadTree::~QuadTree()
 {
-	if ( !isLeaf )
-		delete [] nodes;
+	if ( !m_isLeaf )
+		delete [] m_nodes;
 }
 
 void QuadTree::addObject(GameObject* object)
 {
-	if(isLeaf)
+	m_total_objects++;
+	if(m_isLeaf)
 	{
-		objects.push_back(object);
-		if(objects.size() == objectsToSplit)
+		m_objects.push_back(object);
+		if(m_objects.size() == m_objectsToSplit)
 		{
-			split();
-			addToLeaves();
-			isLeaf = false;
+			m_split();
+			m_addToLeaves();
+			m_isLeaf = false;
 		}
 		return;
 	}
 
 	for(int n = 0;n<4;++n)
 	{
-		if (nodes[n].contains(object))
+		if (m_nodes[n].m_contains(object))
 		{
-			nodes[n].addObject(object);
+			m_nodes[n].addObject(object);
 			return;
 		}
 	}
-	objects.push_back(object);
+	m_objects.push_back(object);
 }
 void QuadTree::removeObject(GameObject* object)
 {
-	if(!isLeaf)
+	m_total_objects--;
+	if(!m_isLeaf)
 	{
 		for(int n = 0;n<4;++n)
 		{
-			if (nodes[n].contains(object))
+			if (m_nodes[n].m_contains(object))
 			{
-				nodes[n].removeObject( object );
+				m_nodes[n].removeObject( object );
 				return;
 			}
 		}
 	}
 
-    auto i = objects.begin();
-	for(; i != objects.end();)
+    auto i = m_objects.begin();
+	for(; i != m_objects.end();)
 			if (*i == object)
 			{
-				i = objects.erase(i);
+				i = m_objects.erase(i);
 				return;
 			}
 			else
@@ -86,19 +91,19 @@ void QuadTree::removeObject(GameObject* object)
 
 std::list<GameObject*> QuadTree::getObjectsAt(sf::Vector2i pos)
 {
-	if ( isLeaf ) {
-		return objects;
+	if ( m_isLeaf ) {
+		return m_objects;
 	}
 
 	std::list<GameObject*> returnedObjects;
 	std::list<GameObject*> childObjects;
 
-	if ( !objects.empty() )
-		returnedObjects.insert( returnedObjects.end(), objects.begin(), objects.end() );
+	if ( !m_objects.empty() )
+		returnedObjects.insert( returnedObjects.end(), m_objects.begin(), m_objects.end() );
 
 	for ( int n = 0; n < 4; ++n ) {
-		if ( nodes[n].contains(pos) ) {
-			childObjects = nodes[n].getObjectsAt( pos );
+		if ( m_nodes[n].contains(pos) ) {
+			childObjects = m_nodes[n].getObjectsAt( pos );
 			returnedObjects.insert( returnedObjects.end(), childObjects.begin(), childObjects.end() );
 			break;
 		}
@@ -111,36 +116,9 @@ std::list<GameObject*> QuadTree::getObjectsAt(sf::Vector2i pos)
 
 //rmv empt
 
-//draw
-void QuadTree::draw(sf::RenderWindow* window)
-{
-	std::stringstream ss;
-	ss<<objects.size();
-	sf::String num = ss.str();
-
-	
-	
-	text.setFont(font);
-	text.setColor(sf::Color(255,0,64*(level-4)-1,255));
-	text.setPosition(dimensions.left,dimensions.top+level*16);
-	text.setCharacterSize(16);
-
-	text.setString(num);
-	
-	window->draw(shape);
-	window->draw(text);
-	if(!isLeaf)
-	{
-		for (int n=0;n<4;++n)
-		{
-			nodes[n].draw(window);
-		}
-	}
-}
-
 bool QuadTree::contains(sf::Vector2i pos)
 {
-	if ((pos.x > dimensions.left && pos.x < dimensions.left+dimensions.width)&&(pos.y>dimensions.top && pos.y < dimensions.top+dimensions.height))
+	if ((pos.x > m_dimensions.left && pos.x < m_dimensions.left+m_dimensions.width)&&(pos.y>m_dimensions.top && pos.y < m_dimensions.top+m_dimensions.height))
 		return true;
 	return false;
 }
@@ -148,27 +126,27 @@ bool QuadTree::contains(sf::Vector2i pos)
 
 //private:
 
-void QuadTree::split()
+void QuadTree::m_split()
 {
-	sf::Vector2i size(dimensions.width,dimensions.height);
-	nodes = new QuadTree[4];
-	nodes[NW] = QuadTree(sf::IntRect(sf::Vector2i(dimensions.left,                   dimensions.top)                    ,size/2), objectsToSplit, level+1);
-	nodes[NE] = QuadTree(sf::IntRect(sf::Vector2i(dimensions.left+dimensions.width/2,dimensions.top)                    ,size/2), objectsToSplit, level+1);
-	nodes[SW] = QuadTree(sf::IntRect(sf::Vector2i(dimensions.left,                   dimensions.top+dimensions.height/2),size/2), objectsToSplit, level+1);
-	nodes[SE] = QuadTree(sf::IntRect(sf::Vector2i(dimensions.left+dimensions.width/2,dimensions.top+dimensions.height/2),size/2), objectsToSplit, level+1);
+	sf::Vector2f size(m_dimensions.width,m_dimensions.height);
+	m_nodes = new QuadTree[4];
+	m_nodes[NW] = QuadTree(sf::FloatRect(sf::Vector2f(m_dimensions.left,                   m_dimensions.top)                    ,size/2.f), m_objectsToSplit, m_level+1);
+	m_nodes[NE] = QuadTree(sf::FloatRect(sf::Vector2f(m_dimensions.left+m_dimensions.width/2,m_dimensions.top)                    ,size/2.f), m_objectsToSplit, m_level+1);
+	m_nodes[SW] = QuadTree(sf::FloatRect(sf::Vector2f(m_dimensions.left,                   m_dimensions.top+m_dimensions.height/2),size/2.f), m_objectsToSplit, m_level+1);
+	m_nodes[SE] = QuadTree(sf::FloatRect(sf::Vector2f(m_dimensions.left+m_dimensions.width/2,m_dimensions.top+m_dimensions.height/2),size/2.f), m_objectsToSplit, m_level+1);
 }
 
 //add to leaves
-void QuadTree::addToLeaves()
+void QuadTree::m_addToLeaves()
 {
 	for (int n = 0; n < 4; ++n )
 	{
-		for(auto i = objects.begin(); i != objects.end();)
+		for(auto i = m_objects.begin(); i != m_objects.end();)
 		{
-			if(nodes[n].contains(*i))
+			if(m_nodes[n].m_contains(*i))
 			{
-				nodes[n].addObject(*i);
-				i = objects.erase(i);
+				m_nodes[n].addObject(*i);
+				i = m_objects.erase(i);
 			}
 			else
 				i++;
@@ -178,13 +156,13 @@ void QuadTree::addToLeaves()
 }
 
 
-bool QuadTree::contains(GameObject* object)
+bool QuadTree::m_contains(GameObject* object)
 {
-	sf::IntRect oRect = object->getColRect();
+	sf::IntRect oRect = static_cast<sf::IntRect>( object->getColRect() );
 
 	return(
-        dimensions.left < oRect.left &&
-        dimensions.top < oRect.top &&
-        dimensions.top+dimensions.height > oRect.top+oRect.height &&
-        dimensions.left+dimensions.width > oRect.left+oRect.width);
+        m_dimensions.left < oRect.left &&
+        m_dimensions.top < oRect.top &&
+        m_dimensions.top+m_dimensions.height > oRect.top+oRect.height &&
+        m_dimensions.left+m_dimensions.width > oRect.left+oRect.width);
 }

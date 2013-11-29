@@ -24,3 +24,29 @@ sf::Vector2i getCollisionVector(sf::IntRect first, sf::IntRect second)
 	}
 	return sf::Vector2<int>(0,0);//return zero-vector if there's no collision
 }
+
+sf::Vector2f getCollisionVector(sf::FloatRect first, sf::FloatRect second)
+{
+	
+	sf::Vector2f firsthalfsize = sf::Vector2f(first.width/2 , first.height/2);
+	sf::Vector2f secondhalfsize = sf::Vector2f(second.width/2 , second.height/2);
+
+	sf::Vector2f distance = getCenter(first)-getCenter(second);
+	sf::Vector2f sign = getSignVector(distance);
+	sf::Vector2f absdistance(abs(distance.x),abs(distance.y));
+
+	sf::Vector2f difference = (firsthalfsize+secondhalfsize)-absdistance;
+	
+	if(difference.x>0 && difference.y>0)//we check if there's collision on both axis
+	{
+		if(difference.x<difference.y)
+		{
+			return sf::Vector2f(sign.x*difference.x,0);
+		}
+		else
+		{
+			return sf::Vector2f(0,sign.y*difference.y);
+		}
+	}
+	return sf::Vector2f(0,0);//return zero-vector if there's no collision
+}

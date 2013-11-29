@@ -2,7 +2,6 @@
 #define GAME_H
 //rysuje gui, zajmuje sie managementem resourcow 
 #include"Level.h"
-#include"GameEvent.h"
 class Game
 {
 public:
@@ -10,7 +9,6 @@ public:
 	~Game();	
 	void start();
 private:
-	GameEvents m_events;
 	Level* m_level;
 };
 #endif // !GAME_H

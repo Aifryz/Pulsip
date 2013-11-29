@@ -83,9 +83,6 @@
     <ClInclude Include="include\Game.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="include\GameEvent.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
     <ClInclude Include="include\Level.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
@@ -113,8 +110,16 @@
     <ClInclude Include="include\SpriteAnimator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UtilTemplates.h">
+    <ClInclude Include="include\UtilTemplates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Rectangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\Rectangle.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
