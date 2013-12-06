@@ -18,7 +18,11 @@ public:
 	void setPosition(sf::Vector2<T> position);
 	sf::Vector2<T> getSize() const;
 	sf::Vector2<T> getPosition() const;
-	
+	T left();
+	T right();
+	T top();
+	T bottom();
+
 	bool intersects(const Rectangle<T>& rect) const;
 	bool contains(const Rectangle<T>& rect) const;
 	bool contains(T x, T y);

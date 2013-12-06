@@ -40,6 +40,26 @@ template<typename T>
 		return m_position;
 	}
 	template<typename T>
+	T Rectangle<T>::left()
+	{
+		return m_position.x-m_halfsize.x;
+	}
+	template<typename T>
+	T Rectangle<T>::right()
+	{
+		return m_position.x+m_halfsize.x;
+	}
+	template<typename T>
+	T Rectangle<T>::top()
+	{
+		return m_position.y-m_halfsize.y;
+	}
+	template<typename T>
+	T Rectangle<T>::bottom()
+	{
+		return m_position.y+m_halfsize.y;
+	}
+	template<typename T>
 	bool Rectangle<T>::intersects(const Rectangle<T>& rect) const
 	{
 		return false;
