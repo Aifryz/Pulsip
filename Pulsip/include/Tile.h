@@ -22,6 +22,7 @@ class Tile
 
         int getType() const;
         bool isCollideable() const;
+		bool intersects(sf::Vector2i p1, sf::Vector2i p2) const;
 
     private:
         sf::Vector2i m_position;

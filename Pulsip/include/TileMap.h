@@ -17,8 +17,9 @@ public:
 	
 
 	std::vector<Tile> getCollidingWith(GameObject*object) const;
-	
-
+	std::vector<Tile> getCollidingWith(sf::IntRect rect) const;
+	std::vector<Tile> getCollidingWith(sf::Vector2i p1, sf::Vector2i p2) const;
+	std::vector<Tile> getCollidingWithDbg(sf::Vector2i p1, sf::Vector2i p2) const;
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	std::vector<Sector> sectors;
