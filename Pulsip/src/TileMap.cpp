@@ -1,15 +1,14 @@
 #include"../include/TileMap.h"
 #include<iostream>
-TileMap::TileMap(sf::Texture* texture)
+TileMap::TileMap(sf::Texture* texture, unsigned int tilesize, sf::Vector2i starting_pos):
+	m_texture(texture),
+	m_tilesize(tilesize),
+	m_starting_pos(starting_pos)
+{}
+void TileMap::load(std::string name)
 {
-	m_texture = texture;
-	load();
-}
-void TileMap::load()
-{
-	
 	sf::Image map;
-	map.loadFromFile("mapa.png");
+	map.loadFromFile(name);
 	m_size = map.getSize();
 	m_sectorsAmount = m_size / 16U;
 	if(m_size.x %16 !=0)
@@ -26,7 +25,7 @@ void TileMap::load()
 			sf::Image dest;
 			dest.create(16,16);
 			dest.copy(map,0,0,sf::IntRect(x*16,y*16,16,16));
-			sectors[y*m_sectorsAmount.y+x] = Sector(dest,x*512,y*512,m_texture);
+			sectors[y*m_sectorsAmount.y+x] = Sector(dest ,(m_starting_pos.x + x*16*m_tilesize) ,(m_starting_pos.y + y*16*m_tilesize),m_tilesize, m_texture);
 		}
 	}
 }
@@ -44,8 +43,8 @@ Tile TileMap::getTileAt(int x, int y) const
 void TileMap::setTile(Tile tile)
 {
 	
-	int x = tile.getPosition().x/32;
-	int y = tile.getPosition().y/32;
+	int x = tile.getPosition().x/m_tilesize;
+	int y = tile.getPosition().y/m_tilesize;
 	if(x>m_size.x || y>m_size.y)
 		return;
 	int secx = x/16;
@@ -71,8 +70,8 @@ std::vector<Tile> TileMap::getCollidingWith(sf::IntRect rect) const
 {
 	std::vector<Tile> returntiles;
 
-	sf::Vector2i NW((rect.left)/32           ,(rect.top)/32);
-		sf::Vector2i SE((rect.left+rect.width)/32   ,(rect.top+rect.height)/32);
+	sf::Vector2i NW((rect.left)/m_tilesize           ,(rect.top)/m_tilesize);
+	sf::Vector2i SE((rect.left+rect.width)/m_tilesize    ,(rect.top+rect.height)/m_tilesize);
 		for (int y = NW.y; y <= SE.y; y++)
 		{
 			for (int x = NW.x; x <= SE.x; x++)
@@ -90,10 +89,10 @@ void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	//calculate sectors to draw
 	sf::Vector2u pos = static_cast<sf::Vector2u>(target.getView().getCenter() - target.getView().getSize()/2.f);
 	sf::Vector2u  size = static_cast<sf::Vector2u>(target.getView().getSize());
-	unsigned int left = pos.x/512;
-	unsigned int top = pos.y/512;
-	unsigned int right = (pos.x +size.x)/512 +1;
-	unsigned int bottom = (pos.y + size.y)/512 +1;
+	unsigned int left = pos.x/16*m_tilesize;
+	unsigned int top = pos.y/16*m_tilesize;
+	unsigned int right = (pos.x +size.x)/16*m_tilesize +1;
+	unsigned int bottom = (pos.y + size.y)/16*m_tilesize +1;
 	//just to be sure
 	if(top < 0)
 		top = 0;
@@ -117,8 +116,8 @@ void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
 std::vector<Tile> TileMap::getCollidingWith(sf::Vector2i p1, sf::Vector2i p2) const
 {
 	std::vector<Tile> toreturn;
-	sf::Vector2i p1tile = p1/32;
-	sf::Vector2i p2tile = p2/32;
+	sf::Vector2i p1tile = p1/static_cast<int>(m_tilesize);
+	sf::Vector2i p2tile = p2/static_cast<int>(m_tilesize);
 	sf::Vector2i start = p1tile;
 	sf::Vector2i stop = p2tile;
 	if(p1tile.x > p2tile.x)
@@ -195,8 +194,8 @@ std::vector<Tile> TileMap::getCollidingWith(sf::Vector2i p1, sf::Vector2i p2) co
 std::vector<Tile> TileMap::getCollidingWithDbg(sf::Vector2i p1, sf::Vector2i p2) const
 {
 	std::vector<Tile> toreturn;
-	sf::Vector2i p1tile = p1/32;
-	sf::Vector2i p2tile = p2/32;
+	sf::Vector2i p1tile = p1/static_cast<int>(m_tilesize);
+	sf::Vector2i p2tile = p2/static_cast<int>(m_tilesize);
 	int minx = std::min(p1tile.x,p2tile.x);
 	int miny = std::min(p1tile.y,p2tile.y);
 	int maxx = std::max(p1tile.x,p2tile.x);

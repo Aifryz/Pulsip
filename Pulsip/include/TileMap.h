@@ -6,12 +6,14 @@
 class TileMap: public sf::Drawable
 {
 public:
-	TileMap(sf::Texture* texture);
-	TileMap(){};
+	TileMap(sf::Texture* texture, unsigned int tilesize, sf::Vector2i starting_pos = sf::Vector2i(0,0));
 	void tick(sf::Time time);
-	void load();
+	//loads tilemap from image
+	void load(std::string name);
 	sf::Vector2u getSectorsAmount() const;
 	sf::Vector2u getSize() const;
+	sf::Vector2u getTileSize() const;
+	sf::Vector2i getStartingPos() const;
 	Tile getTileAt(int x, int y) const;
 	void setTile(Tile tile);
 	
@@ -27,5 +29,7 @@ private:
 	sf::Texture* m_texture; 
 	sf::Vector2u m_sectorsAmount;
 	sf::Vector2u m_size;
+	unsigned int m_tilesize;
+	sf::Vector2i m_starting_pos;
 };
 #endif // !TILEMAP_H
