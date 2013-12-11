@@ -1,6 +1,6 @@
 #ifndef RECTANGLE_H
 #define RECTANGLE_H
-
+#include"Thor/Vectors.hpp"
 #include"SFML/Graphics.hpp"
 
 ///Utility class for manipulating 2D, centered, axis aligned rectangles
@@ -13,10 +13,10 @@ public:
 	Rectangle(T left, T right, T top, T bottom);
 	template <typename U>
     explicit Rectangle(const Rectangle<U>& other);
-
 	void setSize(sf::Vector2<T> size);
 	void setPosition(sf::Vector2<T> position);
 	sf::Vector2<T> getSize() const;
+	sf::Vector2<T> getHalfSize() const;
 	sf::Vector2<T> getPosition() const;
 	T left();
 	T right();

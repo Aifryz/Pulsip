@@ -19,12 +19,5 @@ private:
 	void speedTick();
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
-	//facing
-	//812  
-	//7X3
-	//654
-	
-
 };
 #endif

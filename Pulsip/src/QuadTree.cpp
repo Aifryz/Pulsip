@@ -4,7 +4,7 @@
 
 QuadTree::QuadTree(sf::Vector2f pos, sf::Vector2f size,int objectsToSplit, int level)
 {
-	m_dimensions = sf::FloatRect(pos,size);
+	m_dimensions = FloatRectangle(size,pos);
 	m_objectsToSplit = objectsToSplit;
 	m_level = 0;
 	m_isLeaf = true;
@@ -12,7 +12,7 @@ QuadTree::QuadTree(sf::Vector2f pos, sf::Vector2f size,int objectsToSplit, int l
 	m_total_objects = 0;
 }
 
-QuadTree::QuadTree(sf::FloatRect dims,int objectsToSplit, int level)
+QuadTree::QuadTree(FloatRectangle dims,int objectsToSplit, int level)
 {
 	m_dimensions = dims;
 	m_objectsToSplit = objectsToSplit;
@@ -24,7 +24,7 @@ QuadTree::QuadTree(sf::FloatRect dims,int objectsToSplit, int level)
 
 QuadTree::QuadTree()
 {
-	m_dimensions = sf::FloatRect(0,0,0,0);
+	m_dimensions = FloatRectangle(0,0,0,0);
 	m_objectsToSplit = 3;
 	m_level = 0;
 	m_nodes = 0;
@@ -89,7 +89,7 @@ void QuadTree::removeObject(GameObject* object)
 				++i;
 }
 
-std::list<GameObject*> QuadTree::getObjectsAt(sf::Vector2i pos)
+std::list<GameObject*> QuadTree::getObjectsAt(sf::Vector2f pos)
 {
 	if ( m_isLeaf ) {
 		return m_objects;
@@ -101,8 +101,10 @@ std::list<GameObject*> QuadTree::getObjectsAt(sf::Vector2i pos)
 	if ( !m_objects.empty() )
 		returnedObjects.insert( returnedObjects.end(), m_objects.begin(), m_objects.end() );
 
-	for ( int n = 0; n < 4; ++n ) {
-		if ( m_nodes[n].contains(pos) ) {
+	for ( int n = 0; n < 4; ++n )
+	{
+		if ( m_nodes[n].contains(pos) )
+		{
 			childObjects = m_nodes[n].getObjectsAt( pos );
 			returnedObjects.insert( returnedObjects.end(), childObjects.begin(), childObjects.end() );
 			break;
@@ -111,29 +113,54 @@ std::list<GameObject*> QuadTree::getObjectsAt(sf::Vector2i pos)
 	
 	return returnedObjects;
 }
-
-
+std::list<GameObject*> QuadTree::getObjects()
+{
+	return m_objects;
+}
+std::list<GameObject*> QuadTree::pollObjects(FloatRectangle area)
+{
+	if ( m_isLeaf ) {
+		return m_objects;
+	}
+	std::list<GameObject*> returnedObjects;
+	std::list<GameObject*> childObjects;
+	if ( !m_objects.empty() )
+		returnedObjects.insert( returnedObjects.end(), m_objects.begin(), m_objects.end() );
+	for (int i = 0; i < 4; i++)
+	{
+		if(m_nodes[i].intersects(area))
+		{
+			childObjects = m_nodes[i].pollObjects(area);
+			returnedObjects.insert( returnedObjects.end(), childObjects.begin(), childObjects.end() );
+		}
+	}
+}
 
 //rmv empt
 
-bool QuadTree::contains(sf::Vector2i pos)
+bool QuadTree::contains(sf::Vector2f pos)
 {
-	if ((pos.x > m_dimensions.left && pos.x < m_dimensions.left+m_dimensions.width)&&(pos.y>m_dimensions.top && pos.y < m_dimensions.top+m_dimensions.height))
-		return true;
-	return false;
+	return m_dimensions.contains(pos);
 }
 
-
-//private:
+bool QuadTree::intersects(FloatRectangle rect)
+{
+	return m_dimensions.intersects(rect);
+}
+bool QuadTree::contains(FloatRectangle rect)
+{
+	return m_dimensions.contains(rect);
+}
+///////////private:
 
 void QuadTree::m_split()
 {
-	sf::Vector2f size(m_dimensions.width,m_dimensions.height);
+	sf::Vector2f halfsize = m_dimensions.getHalfSize();
 	m_nodes = new QuadTree[4];
-	m_nodes[NW] = QuadTree(sf::FloatRect(sf::Vector2f(m_dimensions.left,                   m_dimensions.top)                    ,size/2.f), m_objectsToSplit, m_level+1);
-	m_nodes[NE] = QuadTree(sf::FloatRect(sf::Vector2f(m_dimensions.left+m_dimensions.width/2,m_dimensions.top)                    ,size/2.f), m_objectsToSplit, m_level+1);
-	m_nodes[SW] = QuadTree(sf::FloatRect(sf::Vector2f(m_dimensions.left,                   m_dimensions.top+m_dimensions.height/2),size/2.f), m_objectsToSplit, m_level+1);
-	m_nodes[SE] = QuadTree(sf::FloatRect(sf::Vector2f(m_dimensions.left+m_dimensions.width/2,m_dimensions.top+m_dimensions.height/2),size/2.f), m_objectsToSplit, m_level+1);
+	m_nodes[NW] = QuadTree(FloatRectangle(m_dimensions.getPosition()+sf::Vector2f(-halfsize.x, -halfsize.y),halfsize), m_objectsToSplit, m_level+1);
+	m_nodes[NE] = QuadTree(FloatRectangle(m_dimensions.getPosition()+sf::Vector2f(halfsize.x, -halfsize.y ),halfsize), m_objectsToSplit, m_level+1);
+	m_nodes[SW] = QuadTree(FloatRectangle(m_dimensions.getPosition()+sf::Vector2f(-halfsize.x, halfsize.y),halfsize), m_objectsToSplit, m_level+1);
+	m_nodes[SE] = QuadTree(FloatRectangle(m_dimensions.getPosition()+sf::Vector2f(halfsize.x,halfsize.y),halfsize), m_objectsToSplit, m_level+1);
 }
 
 //add to leaves
@@ -158,11 +185,6 @@ void QuadTree::m_addToLeaves()
 
 bool QuadTree::m_contains(GameObject* object)
 {
-	sf::IntRect oRect = static_cast<sf::IntRect>( object->getColRect() );
-
-	return(
-        m_dimensions.left < oRect.left &&
-        m_dimensions.top < oRect.top &&
-        m_dimensions.top+m_dimensions.height > oRect.top+oRect.height &&
-        m_dimensions.left+m_dimensions.width > oRect.left+oRect.width);
+	return(m_dimensions.contains(object->getAABB()));
 }
+

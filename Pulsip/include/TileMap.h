@@ -6,7 +6,7 @@
 class TileMap: public sf::Drawable
 {
 public:
-	TileMap(sf::Texture* texture, unsigned int tilesize, sf::Vector2i starting_pos = sf::Vector2i(0,0));
+	TileMap(sf::Texture* texture, unsigned int tilesize);
 	void tick(sf::Time time);
 	//loads tilemap from image
 	void load(std::string name);
@@ -21,7 +21,6 @@ public:
 	std::vector<Tile> getCollidingWith(GameObject*object) const;
 	std::vector<Tile> getCollidingWith(sf::IntRect rect) const;
 	std::vector<Tile> getCollidingWith(sf::Vector2i p1, sf::Vector2i p2) const;
-	std::vector<Tile> getCollidingWithDbg(sf::Vector2i p1, sf::Vector2i p2) const;
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	std::vector<Sector> sectors;

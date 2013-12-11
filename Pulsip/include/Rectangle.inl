@@ -62,30 +62,59 @@ template<typename T>
 	template<typename T>
 	bool Rectangle<T>::intersects(const Rectangle<T>& rect) const
 	{
+		sf::Vector2<T> distance = rect.getPosition()-m_position;
+		sf::Vector2<T> mindistanec = rect.getHalfSize()+m_halfsize;
+		sf::Vector2<T> absdst = sf::Vector2<T>(std::abs(distance.x),std::abs(distance.y));
+		sf::Vector2<T> difference = (firsthalfsize+secondhalfsize)-absdistance;
+		if(difference.x>0 && difference.y>0)//we check if there's collision on both axis
+			return true;
 		return false;
 	}
 	template<typename T>
 	bool Rectangle<T>::contains(const Rectangle<T>& rect) const
 	{
+		if(rect.left() > left() &&
+		   rect.right() < right() &&
+		   rect.top() > top() &&
+		   rect.bottom() < bottom())
+			return true;
 		return false;
 	}
 	template<typename T>
 	bool Rectangle<T>::contains(T x, T y)
 	{
+		if(left()< x && right > x && top() < y && bottom() > y )
+			return true;
 		return false;
 	}
 	template<typename T>
 	bool Rectangle<T>::contains(const sf::Vector2<T>& point)
 	{
-		return false;
+		return contains(point.x,point.y);
 	}
 	template<typename T>
 	bool Rectangle<T>::ejectFrom(const Rectangle<T>& rect)
 	{
+		sf::Vector2<T> distance = rect.getPosition()-m_position;
+		sf::Vector2<T> mindistanec = rect.getHalfSize()+m_halfsize;
+		sf::Vector2<T> absdst = sf::Vector2<T>(std::abs(distance.x),std::abs(distance.y));
+		sf::Vector2<T> sign = getSignVector(distance);
+		sf::Vector2<T> difference = (firsthalfsize+secondhalfsize)-absdistance;
+		if(difference.x>0 && difference.y>0)//we check if there's collision on both axis
+		{
+			if(difference.x<difference.y)//eject in the axis where there's smallest difference
+			{
+				m_position += sf::Vector2<T>(sign.x*difference.x,0);
+			}
+			else
+			{
+				m_position += sf::Vector2<T>(0,sign.y*difference.y);
+			}
+			return true;
+		}
 		return false;
 	}
 	template<typename T>
-
 	bool Rectangle<T>::operator ==(const Rectangle<T>& other)
 	{
 		if(m_position == other.m_position && m_halfsize == other.m_halfsize)

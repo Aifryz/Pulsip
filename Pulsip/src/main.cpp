@@ -2,6 +2,7 @@
 #include "SFML/Graphics.hpp"
 #include "../include/TileMap.h"
 #include "../include/GameObject.h"
+#include "Thor\Particles.hpp"
 //class Sim:public GameObject
 //{
 //public:
@@ -70,10 +71,12 @@ int main()
 	sf::Texture sprtx;
 	sprtx.loadFromFile("cross.png");
 	maptex.loadFromFile("tileset.png");
-	
-	
+	sf::View vw = window.getView();
+	vw.setCenter(300,300);
+	window.setView(vw);
 	sf::Clock clk;
-	TileMap tlm(&maptex);
+	TileMap tlm(&maptex,32U);
+	tlm.load("mapa.png");
 	sf::Vector2i p3(160,113);
     while (window.isOpen())
     {
@@ -84,23 +87,14 @@ int main()
                 window.close();
         }
 		sf::Vector2i pos = sf::Mouse::getPosition(window);
-		//float z = (p2.y-p1.y)*pos.x + (p1.x-p2.x)*pos.y + (p2.x*p1.y-p1.x*p2.y);
-		//std::cout<<pos.x<<" "<<pos.y<<" "<<z<<"\n";
-		//float z = (p2.y-p1.y)*pos.x + (p1.x-p2.x)*pos.y + (p2.x*p1.y-p1.x*p2.y);
-		//std::vector<Tile> tiles = tlm.getCollidingWith(&test);
-		sf::Time start = clk.getElapsedTime();
+		
+		
 		std::vector<Tile> tiles = tlm.getCollidingWith(static_cast<sf::Vector2i>(p1),pos);
 		sf::Time mid = clk.getElapsedTime();
-		std::vector<Tile> tiles2 = tlm.getCollidingWithDbg(static_cast<sf::Vector2i>(p1),pos);
-		sf::Time stop = clk.getElapsedTime();
+		
 		arr[1].position = static_cast<sf::Vector2f>(pos);
-		std::cout<<"dbg "<<mid.asMicroseconds()-stop.asMicroseconds()<<"\n";
-		std::cout<<"std "<<start.asMicroseconds()-mid.asMicroseconds()<<"\n";
-		if(mid.asMicroseconds()-stop.asMicroseconds() > start.asMicroseconds()-mid.asMicroseconds())
-		{
-			std::cout<<"ssssssssssssssssssssssssssssssssssssssssssssssssss"<<"\n";
-		}
-		std::vector<sf::Sprite> sprs;
+		
+		
 		
         window.clear();
 		

@@ -3,7 +3,6 @@
 
 #include "GameObject.h"
 
-
 class Entity:public GameObject
 {
     public:
@@ -23,7 +22,6 @@ class Entity:public GameObject
 
     protected:
         sf::Vector2f m_speed;
-        
 		sf::Sprite m_sprite;
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
 };

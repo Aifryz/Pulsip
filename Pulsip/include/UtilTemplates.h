@@ -4,27 +4,6 @@
 #include "SFML/Graphics.hpp"
 /**This file contains some utility templates*/
 
-/**Calculates the right border of the rect*/
-template<typename T>
-inline T right(sf::Rect<T> rect)
-{
-	return rect.left+rect.width;
-}
-
-/**Calculates the bottom border of the rect*/
-template<typename T>
-inline T bottom(sf::Rect<T> rect)
-{
-	return rect.top+rect.height;
-}
-
-/**Calculates the center of the rect*/
-template<typename T>
-inline sf::Vector2<T> getCenter(sf::Rect<T> rect)
-{
-	return sf::Vector2<T>(rect.left + rect.width/2, rect.top + rect.height/2);
-}
-
 /**Returns vector that contains signs of inputed vector*/
 template<typename T>
 sf::Vector2<T> getSignVector(sf::Vector2<T> vector)

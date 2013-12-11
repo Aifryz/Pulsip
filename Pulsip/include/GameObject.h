@@ -2,6 +2,7 @@
 #define GAMEOBJECT_H
 
 #include"SFML/Graphics.hpp"
+#include"Rectangle.h"
 
 class GameObject:public sf::Drawable
 {
@@ -16,9 +17,9 @@ public:
 	virtual sf::Vector2f getPosition() const = 0;
 	virtual void setPosition(sf::Vector2i position)= 0;
 	
-	sf::FloatRect getColRect() const;
+	FloatRectangle getAABB() const;
 protected:
-	sf::FloatRect m_colrect;
+	FloatRectangle m_AABB;
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
 };
 #endif

@@ -1,9 +1,8 @@
 #include"../include/TileMap.h"
 #include<iostream>
-TileMap::TileMap(sf::Texture* texture, unsigned int tilesize, sf::Vector2i starting_pos):
+TileMap::TileMap(sf::Texture* texture, unsigned int tilesize):
 	m_texture(texture),
-	m_tilesize(tilesize),
-	m_starting_pos(starting_pos)
+	m_tilesize(tilesize)
 {}
 void TileMap::load(std::string name)
 {
@@ -25,7 +24,7 @@ void TileMap::load(std::string name)
 			sf::Image dest;
 			dest.create(16,16);
 			dest.copy(map,0,0,sf::IntRect(x*16,y*16,16,16));
-			sectors[y*m_sectorsAmount.y+x] = Sector(dest ,(m_starting_pos.x + x*16*m_tilesize) ,(m_starting_pos.y + y*16*m_tilesize),m_tilesize, m_texture);
+			sectors[y*m_sectorsAmount.y+x] = Sector(dest ,(x*16*m_tilesize) ,(y*16*m_tilesize),m_tilesize, m_texture);
 		}
 	}
 }
@@ -87,12 +86,12 @@ std::vector<Tile> TileMap::getCollidingWith(sf::IntRect rect) const
 void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	//calculate sectors to draw
-	sf::Vector2u pos = static_cast<sf::Vector2u>(target.getView().getCenter() - target.getView().getSize()/2.f);
-	sf::Vector2u  size = static_cast<sf::Vector2u>(target.getView().getSize());
-	unsigned int left = pos.x/16*m_tilesize;
-	unsigned int top = pos.y/16*m_tilesize;
-	unsigned int right = (pos.x +size.x)/16*m_tilesize +1;
-	unsigned int bottom = (pos.y + size.y)/16*m_tilesize +1;
+	sf::Vector2i pos = static_cast<sf::Vector2i>(target.getView().getCenter() - target.getView().getSize()/2.f);
+	sf::Vector2i  size = static_cast<sf::Vector2i>(target.getView().getSize());
+	int left = (pos.x)/static_cast<int>(16*m_tilesize);
+	int top = (pos.y)/static_cast<int>(16*m_tilesize);
+	int right = (pos.x +size.x)/static_cast<int>(16*m_tilesize) +1;
+	int bottom = (pos.y + size.y)/static_cast<int>(16*m_tilesize) +1;
 	//just to be sure
 	if(top < 0)
 		top = 0;
@@ -104,9 +103,9 @@ void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	if(bottom > m_sectorsAmount.y)
 		bottom = m_sectorsAmount.y;
 	//draw'em
-	for (unsigned int y = top; y < bottom; y++)
+	for (int y = top; y < bottom; y++)
 		{
-			for (unsigned int x = left; x < right; x++)
+			for (int x = left; x < right; x++)
 			{
 				target.draw(sectors[y*m_sectorsAmount.y+x]);
 			}
@@ -187,28 +186,6 @@ std::vector<Tile> TileMap::getCollidingWith(sf::Vector2i p1, sf::Vector2i p2) co
 			if(get.isCollideable())
 				toreturn.push_back(get);
 			currenty++;
-		}
-	}
-	return toreturn;
-}
-std::vector<Tile> TileMap::getCollidingWithDbg(sf::Vector2i p1, sf::Vector2i p2) const
-{
-	std::vector<Tile> toreturn;
-	sf::Vector2i p1tile = p1/static_cast<int>(m_tilesize);
-	sf::Vector2i p2tile = p2/static_cast<int>(m_tilesize);
-	int minx = std::min(p1tile.x,p2tile.x);
-	int miny = std::min(p1tile.y,p2tile.y);
-	int maxx = std::max(p1tile.x,p2tile.x);
-	int maxy = std::max(p1tile.y,p2tile.y);
-	for (int y = miny; y <= maxy; y++)
-	{
-		for (int x = minx; x <= maxx; x++)
-		{
-			Tile get = getTileAt(x,y);
-			if(get.intersects(p1,p2) && get.isCollideable())
-			{
-				toreturn.push_back(get);
-			}
 		}
 	}
 	return toreturn;

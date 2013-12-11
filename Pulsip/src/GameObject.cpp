@@ -1,6 +1,6 @@
 #include "../include/GameObject.h"
 
-sf::FloatRect GameObject::getColRect() const
+FloatRectangle GameObject::getAABB() const
 {
-	return m_colrect;
+	return m_AABB;
 }
