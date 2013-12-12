@@ -17,7 +17,6 @@ public:
 	Tile getTileAt(int x, int y) const;
 	void setTile(Tile tile);
 	
-
 	std::vector<Tile> getCollidingWith(GameObject*object) const;
 	std::vector<Tile> getCollidingWith(sf::IntRect rect) const;
 	std::vector<Tile> getCollidingWith(sf::Vector2i p1, sf::Vector2i p2) const;

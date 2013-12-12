@@ -62,7 +62,7 @@ sf::Vector2u TileMap::getSize() const
 
 std::vector<Tile> TileMap::getCollidingWith(GameObject*object)const
 {
-	sf::IntRect rect = static_cast<sf::IntRect>( object->getColRect() );
+	sf::IntRect rect = static_cast<sf::IntRect>(sf::FloatRect(object->getPosition(),object->getSize()));
 	return getCollidingWith(rect);
 }
 std::vector<Tile> TileMap::getCollidingWith(sf::IntRect rect) const

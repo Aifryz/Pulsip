@@ -25,3 +25,5 @@ Pulsip.opensdf
 
 # Other files
 *.gch
+# Images
+*.png
