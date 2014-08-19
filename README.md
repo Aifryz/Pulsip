@@ -6,19 +6,6 @@ This framework is nowhere near done.
 Features
 --------
 Right now I've implemented some basic features such as:
-
--Sprite Animation
--Basic Entity
--Basic Player controls
--Quad Tree for collision
--very simple Resource Manager
--TileMap(right now with fixed tilesize and position[starts at 0,0]) 
-
-I plan to add at least:
--Level management
--Basic GUI elements
--Particle system
-
-I might replace some of the features using additional libraries such as Thor and SFGUI
-
-(Also I really need to make my code look nicer.)
+-Multi-layer TileMap
+-QuadTree for collisions
+-Nicer implementation of Rectangle(the SFML version is, let's say less than ideal)

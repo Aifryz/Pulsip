@@ -12,18 +12,8 @@
 *.la
 *.a
 
-#Directories
-
-Debug/
-Release/
-
-#sth
-Pulsip.opensdf
-*.suo
-*.user
-*.ncb
-
 # Other files
 *.gch
+
 # Images
 *.png

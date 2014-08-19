@@ -1,192 +1,133 @@
-#include"../include/TileMap.h"
-#include<iostream>
-TileMap::TileMap(sf::Texture* texture, unsigned int tilesize):
-	m_texture(texture),
-	m_tilesize(tilesize)
-{}
-void TileMap::load(std::string name)
+#include "Pulsip/TileMap.hpp"
+namespace pul
 {
-	sf::Image map;
-	map.loadFromFile(name);
-	m_size = map.getSize();
-	m_sectorsAmount = m_size / 16U;
-	if(m_size.x %16 !=0)
-		m_sectorsAmount.x++;
-	if(m_size.y %16 !=0)
-		m_sectorsAmount.y++;;
-
-	sectors.resize(m_sectorsAmount.x * m_sectorsAmount.y);
-
-	for(unsigned int y=0;y<m_sectorsAmount.y;y++)
+	TileMap::TileMap(sf::Vector2f tilesize, size_t num_of_layers):
+		m_tilesize(tilesize),
+		m_texture(nullptr)
 	{
-		for(unsigned int x=0;x<m_sectorsAmount.x;x++)
-		{
-			sf::Image dest;
-			dest.create(16,16);
-			dest.copy(map,0,0,sf::IntRect(x*16,y*16,16,16));
-			sectors[y*m_sectorsAmount.y+x] = Sector(dest ,(x*16*m_tilesize) ,(y*16*m_tilesize),m_tilesize, m_texture);
-		}
+		m_layers.resize(num_of_layers);
 	}
-}
-Tile TileMap::getTileAt(int x, int y) const
-{
-	if(x>m_size.x || y>m_size.y)
-		return Tile(0,0,0);
-	
-	int secx = x/16;
-	int secy = y/16;
-	
-	return sectors[secy*m_sectorsAmount.y+secx].getTileAt(x,y);
-	
-}
-void TileMap::setTile(Tile tile)
-{
-	
-	int x = tile.getPosition().x/m_tilesize;
-	int y = tile.getPosition().y/m_tilesize;
-	if(x>m_size.x || y>m_size.y)
-		return;
-	int secx = x/16;
-	int secy = y/16;
-	sectors[secy*m_sectorsAmount.y+secx].setTile(tile);
-}
-
-sf::Vector2u TileMap::getSectorsAmount() const
-{
-	return m_sectorsAmount;
-}
-sf::Vector2u TileMap::getSize() const
-{
-	return m_size;
-}
-
-std::vector<Tile> TileMap::getCollidingWith(GameObject*object)const
-{
-	sf::IntRect rect = static_cast<sf::IntRect>(sf::FloatRect(object->getPosition(),object->getSize()));
-	return getCollidingWith(rect);
-}
-std::vector<Tile> TileMap::getCollidingWith(sf::IntRect rect) const
-{
-	std::vector<Tile> returntiles;
-
-	sf::Vector2i NW((rect.left)/m_tilesize           ,(rect.top)/m_tilesize);
-	sf::Vector2i SE((rect.left+rect.width)/m_tilesize    ,(rect.top+rect.height)/m_tilesize);
-		for (int y = NW.y; y <= SE.y; y++)
+	TileMap::TileMap(const sf::Texture& texture, sf::Vector2u tileamount, sf::Vector2f tilesize, size_t num_of_layers):
+		m_tilesize(tilesize),
+		m_texture(&texture),
+		m_tileamount(tileamount)
+	{
+		m_layers.resize(num_of_layers);
+		for (int i = 0; i < num_of_layers; i++)
 		{
-			for (int x = NW.x; x <= SE.x; x++)
-			{
-				Tile get = getTileAt(x,y);
-
-				if(get.isCollideable())
-					returntiles.push_back(get);
-			}
+			m_layers[i].resize(tileamount.x*tileamount.y);
 		}
-	return returntiles;
-}
-void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	//calculate sectors to draw
-	sf::Vector2i pos = static_cast<sf::Vector2i>(target.getView().getCenter() - target.getView().getSize()/2.f);
-	sf::Vector2i  size = static_cast<sf::Vector2i>(target.getView().getSize());
-	int left = (pos.x)/static_cast<int>(16*m_tilesize);
-	int top = (pos.y)/static_cast<int>(16*m_tilesize);
-	int right = (pos.x +size.x)/static_cast<int>(16*m_tilesize) +1;
-	int bottom = (pos.y + size.y)/static_cast<int>(16*m_tilesize) +1;
-	//just to be sure
-	if(top < 0)
-		top = 0;
-	if(left < 0)
-		left = 0;
-	
-	if(right > m_sectorsAmount.x)
-		right = m_sectorsAmount.x;
-	if(bottom > m_sectorsAmount.y)
-		bottom = m_sectorsAmount.y;
-	//draw'em
-	for (int y = top; y < bottom; y++)
+		m_vertices.resize(num_of_layers *(tileamount.x*tileamount.y * 4));
+
+		for (int i = 0; i < num_of_layers; i++)
 		{
-			for (int x = left; x < right; x++)
+			for (size_t x = 0; x < tileamount.x; x++)
 			{
-				target.draw(sectors[y*m_sectorsAmount.y+x]);
-			}
-		}
-}
-//p1,p2 pixel perfect coords
-std::vector<Tile> TileMap::getCollidingWith(sf::Vector2i p1, sf::Vector2i p2) const
-{
-	std::vector<Tile> toreturn;
-	sf::Vector2i p1tile = p1/static_cast<int>(m_tilesize);
-	sf::Vector2i p2tile = p2/static_cast<int>(m_tilesize);
-	sf::Vector2i start = p1tile;
-	sf::Vector2i stop = p2tile;
-	if(p1tile.x > p2tile.x)
-	{
-		stop = p1tile;//swap
-		start = p2tile;
-	}
-	int maxy = stop.y;
-	int miny = start.y;
-	if(stop.y < start.y)
-	{
-		maxy = start.y;
-		miny = stop.y;
-	}
-	bool foundnext = false;
-	int nexty = start.y;
-	//calculate special cases, when the line is straight or almost straight
-	if(start.x == stop.x || start.y == stop.y)
-	{
-		int minx = start.x;
-		int miny = std::min(p1tile.y,p2tile.y);
-		int maxx = stop.x;
-		int maxy = std::max(p1tile.y,p2tile.y);
-		for (int y = miny; y <= maxy; y++)
-		{
-			for (int x = minx; x <= maxx; x++)
-			{
-				Tile get = getTileAt(x,y);
-				if(get.isCollideable())
+				for (size_t y = 0; y < tileamount.y; y++)
 				{
-					toreturn.push_back(get);
+					sf::Vertex* layerstart = &m_vertices[i*(tileamount.x*tileamount.y * 4)];
+					sf::Vertex* facestart = &layerstart[(x*tileamount.y + y)*4];
+					sf::Vector2f NE(x*m_tilesize.x, y*m_tilesize.y);
+					
+					facestart[0].position = NE;
+					facestart[1].position = NE + sf::Vector2f(0.f, tilesize.y);
+					facestart[2].position = NE + sf::Vector2f(tilesize.x,tilesize.y);
+					facestart[3].position = NE + sf::Vector2f(tilesize.x, 0.f);
+					
+					std::vector<sf::Vertex*> faceverts{ facestart, facestart + 1, facestart + 2, facestart + 3 };
+					
+					m_layers[i][x*tileamount.y + y] = TileMapFace::Ptr(new TileMapFace(faceverts));
 				}
 			}
 		}
-		return toreturn;
 	}
-	for (int x = start.x; x <= stop.x;x++)
+
+	void TileMap::resize(sf::Vector2u tileamount)
 	{
-		int currenty = nexty;
-		int collumnstart = currenty;
-		foundnext = false;
-		while (currenty>=miny)
+		m_vertices.resize(m_layers.size() *(tileamount.x*tileamount.y * 4));
+
+		for (size_t i = 0; i < m_layers.size(); i++)
 		{
-			if(!foundnext && getTileAt(x+1,currenty).intersects(p1,p2))
+			std::vector<TileMapFace::Ptr> old;
+			old.swap(m_layers[i]);
+			m_layers[i].resize(tileamount.x*tileamount.y * 4);
+
+			for (size_t x = 0; x < m_tileamount.x; x++)
 			{
-				foundnext = true;
-				nexty = currenty;
+				for (size_t y = 0; y < m_tileamount.y; y++)
+				{
+					if (x<tileamount.x && y<tileamount.y)
+						m_layers[i][x*tileamount.y + y] = old[x*m_tileamount.y + y];
+				}
 			}
-			Tile get = getTileAt(x,currenty);
-			if(!get.intersects(p1,p2))
-				break;
-			if(get.isCollideable())
-				toreturn.push_back(get);
-			currenty--;
-		}
-		currenty = collumnstart+1;
-		while (currenty<=maxy)
-		{
-			if(!foundnext && getTileAt(x+1,currenty).intersects(p1,p2))
+			//if face == null create new face
+			for (size_t x = 0; x < tileamount.x; x++)
 			{
-				foundnext = true;
-				nexty = currenty;
+				for (size_t y = 0; y < tileamount.y; y++)
+				{
+					sf::Vertex* layerstart = &m_vertices[i*(tileamount.x*tileamount.y * 4)];
+					sf::Vertex* facestart = &layerstart[(x*tileamount.y + y) * 4];
+					
+					std::vector<sf::Vertex*> faceverts{ facestart, facestart + 1, facestart + 2, facestart + 3 };
+					if (!m_layers[i][x*tileamount.y + y])//if nullptr create new face
+					{
+						m_layers[i][x*tileamount.y + y] = TileMapFace::Ptr(new TileMapFace(faceverts));
+					}
+					else
+					{//update vertices
+						m_layers[i][x*tileamount.y + y]->m_vertices = faceverts;
+						
+					}
+				}
 			}
-			Tile get = getTileAt(x,currenty);
-			if(!get.intersects(p1,p2))
-				break;
-			if(get.isCollideable())
-				toreturn.push_back(get);
-			currenty++;
 		}
+		m_tileamount = tileamount;
 	}
-	return toreturn;
+	const sf::Vector2f& TileMap::getTileSize() const
+	{
+		return m_tilesize;
+	}
+	const sf::Vector2u& TileMap::getTileAmount() const
+	{
+		return m_tileamount;
+	}
+
+	void TileMap::setTexture(const sf::Texture& texture)
+	{
+		m_texture = &texture;
+	}
+	const sf::Texture* TileMap::getTexture() const
+	{
+		return m_texture;
+	}
+
+	TileMapFace::Ptr TileMap::getFaceAtIndex(unsigned int x, unsigned int y, unsigned int layer) const
+	{
+		return getFaceAtIndex(sf::Vector2u(x, y), layer);
+	}
+	TileMapFace::Ptr TileMap::getFace(float x, float y, unsigned int layer) const
+	{
+		return getFace(sf::Vector2f(x, y), layer);
+	}
+	TileMapFace::Ptr TileMap::getFace(sf::Vector2f position, unsigned int layer) const
+	{
+		sf::Vector2f localposition = getInverseTransform().transformPoint(position);
+		unsigned int x = static_cast<int>(localposition.x / m_tilesize.x);
+		unsigned int y = static_cast<int>(localposition.y / m_tilesize.y);
+		if (x < m_tileamount.x &&  y < m_tileamount.y)
+			return getFaceAtIndex(sf::Vector2u(x, y), layer);
+		else
+			return nullptr;
+	}
+	TileMapFace::Ptr TileMap::getFaceAtIndex(sf::Vector2u position, unsigned int layer) const
+	{
+		return m_layers[layer][position.x*m_tileamount.y + position.y];
+	}
+
+	void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
+	{
+		states.transform *= getTransform();
+		states.texture = m_texture;
+		target.draw(&m_vertices[0], m_vertices.size(), sf::PrimitiveType::Quads, states);
+	}
 }
