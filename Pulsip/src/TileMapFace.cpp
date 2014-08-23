@@ -9,9 +9,10 @@ namespace pul
 	void TileMapFace::setTextureRectangle(sf::FloatRect rect)
 	{
 		m_vertices[0]->texCoords = sf::Vector2f(rect.left, rect.top);
-		m_vertices[1]->texCoords = sf::Vector2f(rect.left + rect.width, rect.top);
+		m_vertices[1]->texCoords = sf::Vector2f(rect.left, rect.top + rect.height);
 		m_vertices[2]->texCoords = sf::Vector2f(rect.left + rect.width, rect.top + rect.height);
-		m_vertices[3]->texCoords = sf::Vector2f(rect.left, rect.top + rect.height);
+		m_vertices[3]->texCoords = sf::Vector2f(rect.left + rect.width, rect.top);
+		
 	}
 	void TileMapFace::setColor(sf::Color c)
 	{

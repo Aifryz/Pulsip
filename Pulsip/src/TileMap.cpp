@@ -13,13 +13,13 @@ namespace pul
 		m_tileamount(tileamount)
 	{
 		m_layers.resize(num_of_layers);
-		for (int i = 0; i < num_of_layers; i++)
+		for (size_t i = 0; i < num_of_layers; i++)
 		{
 			m_layers[i].resize(tileamount.x*tileamount.y);
 		}
 		m_vertices.resize(num_of_layers *(tileamount.x*tileamount.y * 4));
 
-		for (int i = 0; i < num_of_layers; i++)
+		for (size_t i = 0; i < num_of_layers; i++)
 		{
 			for (size_t x = 0; x < tileamount.x; x++)
 			{
@@ -50,7 +50,7 @@ namespace pul
 		{
 			std::vector<TileMapFace::Ptr> old;
 			old.swap(m_layers[i]);
-			m_layers[i].resize(tileamount.x*tileamount.y * 4);
+			m_layers[i].resize(tileamount.x*tileamount.y);
 
 			for (size_t x = 0; x < m_tileamount.x; x++)
 			{
@@ -67,6 +67,13 @@ namespace pul
 				{
 					sf::Vertex* layerstart = &m_vertices[i*(tileamount.x*tileamount.y * 4)];
 					sf::Vertex* facestart = &layerstart[(x*tileamount.y + y) * 4];
+
+					sf::Vector2f NE(x*m_tilesize.x, y*m_tilesize.y);
+
+					facestart[0].position = NE;
+					facestart[1].position = NE + sf::Vector2f(0.f, m_tilesize.y);
+					facestart[2].position = NE + sf::Vector2f(m_tilesize.x, m_tilesize.y);
+					facestart[3].position = NE + sf::Vector2f(m_tilesize.x, 0.f);
 					
 					std::vector<sf::Vertex*> faceverts{ facestart, facestart + 1, facestart + 2, facestart + 3 };
 					if (!m_layers[i][x*tileamount.y + y])//if nullptr create new face
@@ -76,7 +83,6 @@ namespace pul
 					else
 					{//update vertices
 						m_layers[i][x*tileamount.y + y]->m_vertices = faceverts;
-						
 					}
 				}
 			}
