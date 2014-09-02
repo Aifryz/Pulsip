@@ -1,6 +1,6 @@
 Pulsip
 ======
-Pulsip is a SFML/C++ framework made for Ludum Dare compo.
+Pulsip is a SFML/C++ game framework made to be used during Ludum Dare compo and/or jam.
 It's made by Aifryz(Robert Bicz) and it's under a zlib license so feel free to use it in your project.
 This framework is nowhere near done.
 Features

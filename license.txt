@@ -1,6 +1,6 @@
 Pulsip C++ Library
 ----
-Copyright (C) 2013 Robert Bicz - robertbicz@gmail.com
+Copyright (C) 2014 Robert Bicz - robertbicz@gmail.com
 
 This software is provided 'as-is', without any express or
 implied warranty. In no event will the authors be held

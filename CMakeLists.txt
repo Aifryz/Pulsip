@@ -103,7 +103,7 @@ endif()
 
 
 # Install include directory and license files
-install(DIRECTORY include
+install(DIRECTORY Pulsip/include
 		DESTINATION .)
 
 install(FILES license.txt
