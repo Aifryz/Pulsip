@@ -1,61 +1,51 @@
 #ifndef PULSIP_TILE_MAP_HPP
 #define PULSIP_TILE_MAP_HPP
-#include<vector>
 #include<memory>
-#include<SFML/Graphics.hpp>
-#include<Pulsip/TileMapFace.hpp>
+#include<Pulsip/Segment.hpp>
+#include<Pulsip/Util.hpp>
 namespace pul
 {
-	/** Class representing multi-layer TileMap
-	*	This class can be used as a standalone tilemap or can be element in more complex system
-	*
-	*/
-	class PULSIP_API TileMap : public sf::Drawable, public sf::Transformable, sf::NonCopyable
-	{
-	public:
-		///Creates empty tilemap
-		TileMap(sf::Vector2f tilesize = sf::Vector2f(32.f, 32.f), size_t layers = 1);
-		///Creates tilemap with given texture, amount of tiles, tilesize and amount of layers
-		TileMap(const sf::Texture& texture, sf::Vector2u tileamount, sf::Vector2f tilesize = sf::Vector2f(32.f, 32.f), size_t layers = 1);
+	
+    //TileType requires[TODO Add documentation]
+	template<class TileType, class SegmentType=Segment<TileType>>
+    class TileMap: sf::Drawable
+    {
+    public:
+        ///Default constructor
+        TileMap();
 
-		///Returns face at given index
-		///This method ignores transform and tile size
-		TileMapFace::Ptr getFaceAtIndex(unsigned int x, unsigned int y, unsigned int layer = 0) const;
+        ///Creates tilemap with given config
+        void create(TileMapConfig config);
 
-		///Returns face at given coordinates
-		///This method takes in account transform and tilesize
-		TileMapFace::Ptr getFace(float x, float y, unsigned int layer = 0) const;
+        ///Returns reference to tile at given position
+        TileType& getTileAt(sf::Vector2u position);
 
-		///Returns face at given index
-		///This method ignores transform and tile size
-		TileMapFace::Ptr getFaceAtIndex(sf::Vector2u position, unsigned int layer = 0) const;
+        ///Returns reference to tile at given position(const version)
+        const TileType& getTileAt(sf::Vector2u position) const;
 
-		///Returns face at given coordinates
-		///This method takes in account transform and tilesize
-		TileMapFace::Ptr getFace(sf::Vector2f position, unsigned int layer = 0) const;
+        ///Sets the texture for the TileMap
+        void setTexture(const sf::Texture& texture);
 
-		const sf::Vector2f& getTileSize() const;
+        ///Returns reference to segment at given index
+        SegmentType& getSegment(sf::Vector2u position);
 
-		///Returns the size(in amount of tiles) of the TileMap
-		const sf::Vector2u& getTileAmount() const;
-		///Returns the amount of layers
-		size_t getLayerAmount() const;
+        ///Returns reference to segment at given index
+        const SegmentType& getSegment(sf::Vector2u position) const;
 
-		void setTexture(const sf::Texture& texture);
-		const sf::Texture* getTexture() const;
+        ///Returns reference to segment which contains tile at given position
+        SegmentType& getSegmentAtTilePos(sf::Vector2u position);
 
-		///Resizes the tilemap.
-		///This method won't invalidate TileMapFace pointers, so it's safe to store them outside of TileMap
-		void resize(sf::Vector2u tileamount);
+        ///Returns reference to segment which contains tile at given position
+        const SegmentType& getSegmentAtTilePos(sf::Vector2u position) const;
 
-	private:
-		std::vector<std::vector<TileMapFace::Ptr>> m_layers;
-		sf::Vector2f m_position;
-		sf::Vector2f m_tilesize;
-		sf::Vector2u m_tileamount;
-		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-		std::vector<sf::Vertex> m_vertices;
-		const sf::Texture* m_texture;
-	};
+        ///Sets the texture rectangle for tile at given position in segment [and layer]
+        void setTextureRectangle(sf::FloatRect rect, sf::Vector2u position, size_t layer = 0);
+    protected:
+        const sf::Texture* m_texture;
+        std::vector<SegmentType> m_segments;
+        TileMapConfig m_config;
+        virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
+    };
+    #include<Pulsip\TileMap.inl>
 }
 #endif // !PULSIP_TILE_MAP_HPP

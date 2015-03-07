@@ -4,8 +4,6 @@ set(PULSIP_SRC
 	QuadTree.cpp
     QuadTreeNode.cpp
     QuadTreeOccupant.cpp
-    TileMap.cpp
-    TileMapFace.cpp
 )
 
 
