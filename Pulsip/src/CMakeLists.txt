@@ -6,11 +6,6 @@ set(PULSIP_SRC
     QuadTreeOccupant.cpp
 )
 
-
-# Library to build
-set(PULSIP_LIB ${PROJECT_NAME})
-
-
 # Determine library suffixes depending on static/shared configuration
 if(PULSIP_SHARED_LIBS)
 	add_library(${PULSIP_LIB} SHARED ${PULSIP_SRC})

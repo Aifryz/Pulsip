@@ -12,7 +12,10 @@ endif()
 project("Pulsip")
 
 add_definitions(-DPULSIP_EXPORTS)
-include_directories(${PROJECT_SOURCE_DIR}/Pulsip/include)
+#Set Pulsip include directory, used in test
+set(PULSIP_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/Pulsip/include)
+
+include_directories(${PULSIP_INCLUDE_DIRS})
 
 set(PULSIP_SHARED_LIBS TRUE CACHE BOOL "Build shared libraries (use shared SFML librares)")
 set(PULSIP_BUILD_EXAMPLES FALSE CACHE BOOL "Build example projects")
@@ -93,9 +96,13 @@ if(PULSIP_BUILD_DOC)
 	add_subdirectory(doc)
 endif()
 
+# Library to build
+set(PULSIP_LIB ${PROJECT_NAME})
 
 # C++ source code
 add_subdirectory(Pulsip/src)
+#Test
+add_subdirectory(test)
 
 if(PULSIP_BUILD_EXAMPLES)
 	add_subdirectory(examples)

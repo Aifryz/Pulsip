@@ -15,5 +15,15 @@
 # Other files
 *.gch
 
-# Images
-*.png
+
+#Visual Studio
+*.sdf
+*.opensdf
+*.vcxproj
+*.vcxproj.filters
+*.sln
+
+#Directories
+Release/*
+Debug/*
+build/*
