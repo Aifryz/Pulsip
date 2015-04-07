@@ -8,8 +8,8 @@ else()
 endif()
 
 #Include Pulsip and SFML
-include_directories (${PULSIP_INCLUDE_DIRS}
-                     ${SFML_INCLUDE_DIRS}
+include_directories (${PULSIP_INCLUDE_DIR}
+                     ${SFML_INCLUDE_DIR}
                      )
 add_executable(PulsipTest main.cpp)
 target_link_libraries (PulsipTest
